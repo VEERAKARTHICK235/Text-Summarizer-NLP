@@ -1,4 +1,4 @@
-# 🧠 AI Text Summarizer (Streamlit + Gemini API)
+# 🧠 AI Text Summarizer (Streamlit + API)
 
 This is a lightweight Streamlit web app that allows users to upload or paste lengthy text (TXT/PDF) and get concise summaries using **API**.
 
