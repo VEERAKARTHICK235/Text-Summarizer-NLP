@@ -6,18 +6,21 @@ import PyPDF2
 from fpdf import FPDF
 import requests
 import json
+import os
+from dotenv import load_dotenv
 from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.corpus import stopwords
 
-# Download NLTK resources
 nltk.download('punkt')
 nltk.download('stopwords')
 
-# -------------------- GEMINI API CONFIG --------------------
-GEMINI_API_KEY = "AIzaSyBAgCAz2YjBHjgapIiA5pdPxRJa4JWus1I"  # Replace with your real Gemini API key
+load_dotenv()  
+
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")  
 GEMINI_API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
 
-# -------------------- GEMINI SUMMARIZATION FUNCTION --------------------
+# -------------------- SUMMARIZATION FUNCTION --------------------
 def summarize_text(input_text, num_sentences=3):
     headers = {
         "Content-Type": "application/json"
@@ -48,12 +51,11 @@ def extract_text_from_pdf(file):
         text += page.extract_text()
     return text
 
-# -------------------- TXT DOWNLOAD LINK --------------------
+# -------------------- DOWNLOAD LINKS --------------------
 def get_text_download_link(text, filename="summary.txt"):
     b64 = base64.b64encode(text.encode()).decode()
     return f'<a href="data:file/txt;base64,{b64}" download="{filename}">📥 Download as .txt</a>'
 
-# -------------------- PDF DOWNLOAD LINK --------------------
 def get_pdf_download_link(text, filename="summary.pdf"):
     pdf = FPDF()
     pdf.add_page()
@@ -63,16 +65,15 @@ def get_pdf_download_link(text, filename="summary.pdf"):
     for line in text.split('\n'):
         pdf.multi_cell(0, 10, line)
 
-    pdf_output = pdf.output(dest='S').encode('latin1')  # Return as bytes
-    b64 = base64.b64encode(pdf_output).decode()         # Encode as base64
+    pdf_output = pdf.output(dest='S').encode('latin1')
+    b64 = base64.b64encode(pdf_output).decode()
     return f'<a href="data:application/pdf;base64,{b64}" download="{filename}">📄 Download as .pdf</a>'
 
 # -------------------- STREAMLIT UI --------------------
 st.set_page_config(page_title="AI Text Summarizer", page_icon="🧠", layout="centered")
 
-# Title
 st.title("📝 AI Text Summarizer")
-st.markdown("Summarize long articles using Google's **Gemini 1.5 Flash** API in seconds.")
+st.markdown("Summarize long articles using Google's **API** in seconds.")
 
 # File Upload
 input_text = ""
