@@ -1,5 +1,6 @@
 streamlit
-nltk
-PyPDF2
-fpdf
 requests
+nltk
+fpdf
+PyPDF2
+python-dotenv
